@@ -5,7 +5,7 @@ import os
 import shutil
 
 import logs
-from langchain.document_loaders.pdf import PyPDFLoader
+from langchain.document_loaders.pdf import PyPDFLoader, PyPDFDirectoryLoader
 from langchain.vectorstores.chroma import Chroma
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -50,12 +50,13 @@ def load_document(path: str) -> list[Document]:
 
 # Load all the documents
 def load_documents() -> list[Document]:
-    # loader = PyPDFDirectoryLoader(DATA_PATH)
-    # docs = loader.load()
-    pdf_files = glob.glob(os.path.join(DATA_PATH, "*.pdf"))
-    docs = []
-    for pdf_file in pdf_files:
-        docs += load_document(pdf_file)
+    # note: we could go document by document, but for simplicity we load all at once
+    loader = PyPDFDirectoryLoader(DATA_PATH)
+    docs = loader.load()
+    # pdf_files = glob.glob(os.path.join(DATA_PATH, "*.pdf"))
+    # docs = []
+    # for pdf_file in pdf_files:
+    #     docs += load_document(pdf_file)
     return docs
 
 
