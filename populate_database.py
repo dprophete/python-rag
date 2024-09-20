@@ -13,8 +13,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from logs import log, logd
 from utils import get_embedding_function
 from pypandoc.pandoc_download import download_pandoc
-import nltk
-
+# import nltk
 # nltk.download("punkt")
 # nltk.download("punkt_tab")
 
