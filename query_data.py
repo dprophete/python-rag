@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 import argparse
 
-from langchain_community.llms.ollama import Ollama
-import logs
 from langchain.prompts import ChatPromptTemplate
 from langchain.vectorstores.chroma import Chroma
+from langchain_anthropic import ChatAnthropic
+from langchain_community.llms.ollama import Ollama
+
+import logs
 from logs import log, logd
 from utils import get_embedding_function
 
@@ -16,7 +18,9 @@ Here is a context:
 {context}
 ```
 
-Answer the following question based on the above context. Be succint and clear:
+Answer the following question based on the above context. Be succint and clear.
+Do NOT start your response with "According to the context".
+Just answer the question directly, that's it:
 ```
 {question}
 ```
@@ -53,9 +57,10 @@ def query_rag(query: str):
     prompt = prompt_template.format(context=context, question=query)
     logd(f"Prompt: {prompt}")
 
-    model = Ollama(model="mistral")
+    # model = Ollama(model="mistral")
+    model = ChatAnthropic(model_name="claude-3-5-sonnet-20240620", timeout=None)
     response = model.invoke(prompt)
-    log(f"Response: {response.strip()}")
+    log(f"Response: {response.content}")
     log(f"Sources: {source_names}")
 
 

@@ -1,5 +1,6 @@
 pypdf
 langchain
+langchain-anthropic
 chromadb # Vector storage
 pytest
 boto3
