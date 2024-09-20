@@ -6,11 +6,17 @@ import shutil
 
 import logs
 from langchain.document_loaders.pdf import PyPDFLoader, PyPDFDirectoryLoader
+from langchain_community.document_loaders.epub import UnstructuredEPubLoader
 from langchain.vectorstores.chroma import Chroma
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from logs import log, logd
 from utils import get_embedding_function
+from pypandoc.pandoc_download import download_pandoc
+import nltk
+
+# nltk.download("punkt")
+# nltk.download("punkt_tab")
 
 CHROMA_PATH = "chroma"
 DATA_PATH = "data"
@@ -41,22 +47,32 @@ def reset_db():
 
 
 # Load a single document
-def load_document(path: str) -> list[Document]:
+def load_pdf(path: str) -> list[Document]:
     loader = PyPDFLoader(path)
     docs = loader.load()
     logd(f"Loaded {len(docs)} pages for {path}")
     return docs
 
 
+def load_epub(path: str) -> list[Document]:
+    loader = UnstructuredEPubLoader(path)
+    docs = loader.load()
+    logd(f"Loaded {len(docs)} pages for {path}")
+    for i, doc in enumerate(docs):
+        doc.metadata["page"] = i
+    return docs
+
+
 # Load all the documents
 def load_documents() -> list[Document]:
     # note: we could go document by document, but for simplicity we load all at once
-    loader = PyPDFDirectoryLoader(DATA_PATH)
-    docs = loader.load()
-    # pdf_files = glob.glob(os.path.join(DATA_PATH, "*.pdf"))
-    # docs = []
-    # for pdf_file in pdf_files:
-    #     docs += load_document(pdf_file)
+    # loader = PyPDFDirectoryLoader(DATA_PATH)
+    # docs = loader.load()
+    docs = []
+    for file in glob.glob(os.path.join(DATA_PATH, "*.pdf")):
+        docs += load_pdf(file)
+    for file in glob.glob(os.path.join(DATA_PATH, "*.epub")):
+        docs += load_epub(file)
     return docs
 
 

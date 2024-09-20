@@ -4,7 +4,6 @@ import argparse
 from langchain.prompts import ChatPromptTemplate
 from langchain.vectorstores.chroma import Chroma
 from langchain_anthropic import ChatAnthropic
-from langchain_community.llms.ollama import Ollama
 
 import logs
 from logs import log, logd

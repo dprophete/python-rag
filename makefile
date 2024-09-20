@@ -9,3 +9,6 @@ question1:
 
 question2:
 	./query_data.py "when does the game ticket to ride end?"
+
+question3:
+	./query_data.py "in rust, how do you read a file?"
